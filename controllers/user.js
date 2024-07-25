@@ -37,6 +37,20 @@ export const login = async (req, res, next) => {
     }
 };
 
+
+export const logout = (req, res) => {
+   const {token} = req.cookies;
+   const decoded = jwt.verify(token , "bfbrjbd");
+   req.user = User.findById(decoded._id);
+   console.log(req.user);
+
+    res.status(200).cookie("token", "", { expires: new Date(Date.now()) }).json({
+        success: true,
+        user: req.user.name,
+        message: "Log Out Succesfully"
+    })
+};
+
 export const register = async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -64,7 +78,7 @@ export const getMyProfile = (req, res) => {
     res.status(200).json({
         success: true,
         message: "User founded successfully",
-        user:req.user
+        user: req.user
     })
 }
 
